@@ -23,6 +23,10 @@ Press one button. It reads your subscription links, tests what is actually alive
 
 <img src="docs/images/1.png" alt="v2rayN Pro Max main window showing the ten fastest V2Ray servers ranked by measured download speed" width="92%">
 
+<br><br>
+
+<img src="docs/images/demo.gif" alt="Screen recording: pressing automode, watching the run test subscription sources, and the fastest servers landing in the Auto Mode group" width="92%">
+
 </div>
 
 ---
