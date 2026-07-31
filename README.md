@@ -21,11 +21,15 @@ Press one button. It reads your subscription links, tests what is actually alive
 <a href="https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-linux-64.zip"><img alt="Download for Linux x64" src="https://img.shields.io/badge/Download-Ubuntu%20x64-F15A2B?style=for-the-badge&logo=ubuntu&logoColor=white"></a>
 </p>
 
+<img src="docs/images/demo.gif" alt="Screen recording: pressing automode, watching the run test subscription sources, and the fastest servers landing in the Auto Mode group" width="92%">
+
+<br><br>
+
 <img src="docs/images/1.png" alt="v2rayN Pro Max main window showing the ten fastest V2Ray servers ranked by measured download speed" width="92%">
 
 <br><br>
 
-<img src="docs/images/demo.gif" alt="Screen recording: pressing automode, watching the run test subscription sources, and the fastest servers landing in the Auto Mode group" width="92%">
+<sub><a href="README.fa.md">فارسی</a> · <a href="README.zh-CN.md">简体中文</a></sub>
 
 </div>
 
@@ -164,7 +168,7 @@ in one burst at the end, and a large batch no longer starves the thread pool.
 - The server list is easier to scan: taller rows, alternating shading, colour-coded latency
 - The log panel is a proper console, with a monospace face, line numbers and green-on-black output
 - A grouped, labelled status bar instead of a row of unexplained controls
-- Light and dark, following the system or set explicitly
+- One dark theme, styled throughout, rather than a theme picker that only half applies
 
 ### Your customisations survive
 
