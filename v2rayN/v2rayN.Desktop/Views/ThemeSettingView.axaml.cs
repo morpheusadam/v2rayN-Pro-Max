@@ -12,13 +12,13 @@ public partial class ThemeSettingView : ReactiveUserControl<ThemeSettingViewMode
         InitializeComponent();
         ViewModel = new ThemeSettingViewModel();
 
-        cmbCurrentTheme.ItemsSource = Utils.GetEnumNames<ETheme>();
+        // No theme picker any more — the fork ships one styled dark theme, so the view
+        // model's CurrentTheme is left at whatever the config already holds.
         cmbCurrentFontSize.ItemsSource = Enumerable.Range(Global.MinFontSize, Global.MinFontSizeCount).ToList();
         cmbCurrentLanguage.ItemsSource = Global.Languages;
 
         this.WhenActivated(disposables =>
         {
-            this.Bind(ViewModel, vm => vm.CurrentTheme, v => v.cmbCurrentTheme.SelectedValue).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.CurrentFontSize, v => v.cmbCurrentFontSize.SelectedValue).DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.CurrentLanguage, v => v.cmbCurrentLanguage.SelectedValue).DisposeWith(disposables);
         });

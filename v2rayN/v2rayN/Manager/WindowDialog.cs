@@ -14,6 +14,9 @@ public class WindowDialog : IWindowDialog
 
         if (viewFor is not WindowBase<TViewModel> window)
         {
+            // Same false as "closed without saving", so it has to name itself in the log
+            // or the failure is invisible.
+            Logging.SaveLog($"WindowDialog: no window registered for {vm.GetType().Name}, got {viewFor?.GetType().Name ?? "null"}");
             return Task.FromResult(false);
         }
 

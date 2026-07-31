@@ -662,11 +662,10 @@ public class MainWindowViewModel : MyReactiveObject
         try
         {
             var vm = new AutoModeSourcesViewModel();
-            var shown = await AppManager.Instance.WindowDialog.ShowDialogAsync(vm);
-            if (!shown)
-            {
-                NoticeManager.Instance.SendMessageEx("Auto Mode settings window could not be opened.");
-            }
+            // The return value is the dialog result — false simply means the window was
+            // closed without saving. Reading it as "the window failed to open" put a
+            // false alarm on the screen every time the settings were dismissed.
+            await AppManager.Instance.WindowDialog.ShowDialogAsync(vm);
         }
         catch (Exception ex)
         {

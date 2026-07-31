@@ -101,6 +101,17 @@ public class AutoModeService
 
         try
         {
+            // Every stage of a run is a core-backed test, so without a core the run cannot
+            // do anything except emit one "core not found" line per candidate — hundreds of
+            // them — and finish with an empty list. Say it once, up front, and stop.
+            var coreProblem = MissingCoreMessage();
+            if (coreProblem is not null)
+            {
+                result.Message = coreProblem;
+                await Report(result.Message);
+                return result;
+            }
+
             var store = await AutoModeSourceManager.Instance.GetStore();
             if (store.Sources.Count == 0)
             {
@@ -258,6 +269,41 @@ public class AutoModeService
     {
         result.Message = "Auto Mode stopped.";
         return result;
+    }
+
+    /// <summary>
+    /// Xray is what every speed test falls back to, so if its executable is not on disk
+    /// there is nothing to test with and the run should not start. sing_box only carries
+    /// the protocols mapped to it, so its absence is worth saying but not worth aborting
+    /// for. Returns null when the run can proceed.
+    /// </summary>
+    public static string? MissingCoreMessage()
+    {
+        if (CoreExists(ECoreType.Xray))
+        {
+            if (!CoreExists(ECoreType.sing_box))
+            {
+                NoticeManager.Instance.SendMessageEx(
+                    $"sing_box is missing from {Utils.GetBinPath("")} — Hysteria2, TUIC, WireGuard and AnyTLS servers cannot be tested this run.");
+            }
+            return null;
+        }
+
+        return $"Auto Mode cannot test anything: the Xray core is not in {Utils.GetBinPath("")}. "
+             + "Use a release that ships the bin folder, or download the cores from Check Update, then try again.";
+    }
+
+    private static bool CoreExists(ECoreType coreType)
+    {
+        var info = CoreInfoManager.Instance.GetCoreInfo(coreType);
+        if (info?.CoreExes is null)
+        {
+            return false;
+        }
+
+        // GetCoreExecFile logs a "not found" line of its own on every miss, which is the
+        // very noise this check exists to prevent — so probe the files directly.
+        return info.CoreExes.Any(name => File.Exists(Utils.GetBinPath(Utils.GetExeName(name), coreType.ToString())));
     }
 
     #region stages

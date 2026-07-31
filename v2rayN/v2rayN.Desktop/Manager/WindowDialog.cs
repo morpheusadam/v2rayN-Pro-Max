@@ -14,6 +14,10 @@ public class WindowDialog : IWindowDialog
 
         if (view is not WindowBase<TViewModel> window)
         {
+            // A false return here is indistinguishable from "the user closed the dialog
+            // without saving", so the only way this failure is ever diagnosable is if it
+            // names the type it could not build.
+            Logging.SaveLog($"WindowDialog: no window registered for {vm.GetType().Name}, got {view?.GetType().Name ?? "null"}");
             return false;
         }
 

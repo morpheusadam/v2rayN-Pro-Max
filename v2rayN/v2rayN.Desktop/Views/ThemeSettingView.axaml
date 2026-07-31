@@ -30,16 +30,7 @@
         <Button.Flyout>
             <Flyout>
                 <StackPanel Margin="{StaticResource MarginTb8}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                            Margin="{StaticResource Margin4}"
-                            VerticalAlignment="Center"
-                            Text="{x:Static resx:ResUI.TbSettingsTheme}" />
-                        <ComboBox
-                            x:Name="cmbCurrentTheme"
-                            Margin="{StaticResource Margin4}"
-                            HorizontalAlignment="Center" />
-                    </StackPanel>
+                    <!--  The theme picker is gone: this fork ships one styled dark theme.  -->
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
                             Margin="{StaticResource Margin4}"

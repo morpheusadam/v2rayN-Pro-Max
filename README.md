@@ -182,15 +182,18 @@ source.
 | Windows 10 / 11, x64 | [v2rayN-Pro-Max-windows-64.zip](https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-windows-64.zip) |
 | Ubuntu and derivatives, x64 | [v2rayN-Pro-Max-linux-64.zip](https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-linux-64.zip) |
 
-Both are self-contained, so no .NET runtime is required.
+Both are self-contained, so no .NET runtime is required, and both ship the proxy cores and
+geo rule files in a `bin` folder inside the archive. That is what makes the archives large —
+nothing has to be downloaded before the first test can run.
 
-1. Extract the archive anywhere
+1. Extract the archive anywhere, keeping the `bin` folder beside the executable
 2. Run `v2rayN.exe`, or on Linux `chmod +x ./v2rayN` and then `./v2rayN`
 3. Open Auto Mode settings with the gear beside the automode button
 4. Paste your subscription links, or import [`sub.example.txt`](sub.example.txt), which ships in the archive
 5. Press **automode** and wait a few minutes
 
-On first run the app offers to download the proxy cores and geo rule files.
+Newer cores can be fetched later from **Help → Check Update**; the app itself does not
+self-update, on purpose.
 
 A run takes three to five minutes depending on how many links you have and how healthy they
 are, uses roughly fourteen percent of one core while it works, and settles back to normal
