@@ -2,6 +2,8 @@
 
 <img src="docs/images/banner.svg" alt="v2rayN Pro Max - automatic server selection for V2Ray and Xray on Windows" width="100%">
 
+<img src="docs/images/logo.png" alt="v2rayN Pro Max logo" width="110">
+
 <h1>v2rayN Pro Max</h1>
 
 <p><strong>A V2Ray / Xray client for Windows that finds working servers by itself.</strong><br>
@@ -12,6 +14,11 @@ Press one button. It reads your subscription links, tests what is actually alive
 <img alt="Based on v2rayN 7.24.4" src="https://img.shields.io/badge/based%20on-v2rayN%207.24.4-1f1f22?style=for-the-badge&labelColor=F15A2B">
 <img alt="Cores" src="https://img.shields.io/badge/cores-Xray%20%7C%20sing--box%20%7C%20mihomo-1f1f22?style=for-the-badge&labelColor=F15A2B">
 <img alt="113 tests passing" src="https://img.shields.io/badge/tests-113%20passing-1f1f22?style=for-the-badge&labelColor=2E9E6B">
+</p>
+
+<p>
+<a href="https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-windows-64.zip"><img alt="Download for Windows x64" src="https://img.shields.io/badge/Download-Windows%20x64-F15A2B?style=for-the-badge&logo=windows&logoColor=white"></a>
+<a href="https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-linux-64.zip"><img alt="Download for Linux x64" src="https://img.shields.io/badge/Download-Ubuntu%20x64-F15A2B?style=for-the-badge&logo=ubuntu&logoColor=white"></a>
 </p>
 
 <img src="docs/images/1.png" alt="v2rayN Pro Max main window showing the ten fastest V2Ray servers ranked by measured download speed" width="92%">
@@ -170,11 +177,20 @@ source.
 
 ## Install
 
-1. Download the release and extract it anywhere
-2. Run `v2rayN.exe`
+| Platform | Download |
+|---|---|
+| Windows 10 / 11, x64 | [v2rayN-Pro-Max-windows-64.zip](https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-windows-64.zip) |
+| Ubuntu and derivatives, x64 | [v2rayN-Pro-Max-linux-64.zip](https://github.com/morpheusadam/v2rayN-Pro-Max/releases/latest/download/v2rayN-Pro-Max-linux-64.zip) |
+
+Both are self-contained, so no .NET runtime is required.
+
+1. Extract the archive anywhere
+2. Run `v2rayN.exe`, or on Linux `chmod +x ./v2rayN` and then `./v2rayN`
 3. Open Auto Mode settings with the gear beside the automode button
-4. Paste your subscription links, or import [`sub.example.txt`](sub.example.txt) from this repository
+4. Paste your subscription links, or import [`sub.example.txt`](sub.example.txt), which ships in the archive
 5. Press **automode** and wait a few minutes
+
+On first run the app offers to download the proxy cores and geo rule files.
 
 A run takes three to five minutes depending on how many links you have and how healthy they
 are, uses roughly fourteen percent of one core while it works, and settles back to normal
