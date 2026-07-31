@@ -404,7 +404,16 @@ public partial class CoreConfigV2rayService
 
                 TlsSettings4Ray tlsSettings = new()
                 {
-                    allowInsecure = _node.GetAllowInsecure(),
+                    // Xray has removed allowInsecure, and it rejects the whole config
+                    // file when it sees the value true. A speed test puts every node of a
+                    // batch into one file, so a single node carrying allowInsecure=1 —
+                    // common in public subscription lists — stops the core from starting
+                    // and reports -1 for every other node in that batch.
+                    //
+                    // The setting cannot be honoured any more whatever we emit, so emit
+                    // the accepted value. Such a node then verifies its certificate like
+                    // any other and fails on its own instead of taking the batch with it.
+                    allowInsecure = false,
                     alpn = _node.GetAlpn(),
                     fingerprint = _node.Fingerprint.IsNullOrEmpty() ? _config.CoreBasicItem.DefFingerprint : _node.Fingerprint,
                     echConfigList = _node.EchConfigList.NullIfEmpty(),

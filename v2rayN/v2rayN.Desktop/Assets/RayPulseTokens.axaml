@@ -1,0 +1,118 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        RayPulse design tokens, taken from design.md.
+
+        Accent orange is the only saturated colour in the system; everything else is
+        neutral, so anything tinted orange reads as "this is the thing to act on".
+        Light and dark live in ThemeDictionaries so the existing theme switcher keeps
+        working with no extra code.
+    -->
+
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="RayPulse.Background" Color="#EFEFED" />
+            <SolidColorBrush x:Key="RayPulse.Card" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="RayPulse.CardMuted" Color="#E7E6E3" />
+            <SolidColorBrush x:Key="RayPulse.CardDark" Color="#242426" />
+
+            <SolidColorBrush x:Key="RayPulse.TextPrimary" Color="#151515" />
+            <SolidColorBrush x:Key="RayPulse.TextSecondary" Color="#9A9A9E" />
+
+            <SolidColorBrush x:Key="RayPulse.Hairline" Color="#E2E1DE" />
+            <SolidColorBrush x:Key="RayPulse.Track" Color="#E2E1DE" />
+            <SolidColorBrush x:Key="RayPulse.Hover" Color="#12000000" />
+            <SolidColorBrush x:Key="RayPulse.SelectionRow" Color="#22F15A2B" />
+            <SolidColorBrush x:Key="RayPulse.AccentSoft" Color="#24F15A2B" />
+            <SolidColorBrush x:Key="RayPulse.Stripe" Color="#0DF15A2B" />
+
+            <SolidColorBrush x:Key="RayPulse.Good" Color="#2E9E6B" />
+            <SolidColorBrush x:Key="RayPulse.Fair" Color="#C79A2E" />
+            <SolidColorBrush x:Key="RayPulse.Poor" Color="#D2533F" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="RayPulse.Background" Color="#161618" />
+            <SolidColorBrush x:Key="RayPulse.Card" Color="#242426" />
+            <SolidColorBrush x:Key="RayPulse.CardMuted" Color="#2E2E32" />
+            <SolidColorBrush x:Key="RayPulse.CardDark" Color="#101012" />
+
+            <SolidColorBrush x:Key="RayPulse.TextPrimary" Color="#F3F3F1" />
+            <SolidColorBrush x:Key="RayPulse.TextSecondary" Color="#8C8C92" />
+
+            <SolidColorBrush x:Key="RayPulse.Hairline" Color="#33333A" />
+            <SolidColorBrush x:Key="RayPulse.Track" Color="#3A3A41" />
+            <SolidColorBrush x:Key="RayPulse.Hover" Color="#14FFFFFF" />
+            <SolidColorBrush x:Key="RayPulse.SelectionRow" Color="#33F15A2B" />
+            <SolidColorBrush x:Key="RayPulse.AccentSoft" Color="#33F15A2B" />
+            <SolidColorBrush x:Key="RayPulse.Stripe" Color="#14F15A2B" />
+
+            <SolidColorBrush x:Key="RayPulse.Good" Color="#41C289" />
+            <SolidColorBrush x:Key="RayPulse.Fair" Color="#E0B44A" />
+            <SolidColorBrush x:Key="RayPulse.Poor" Color="#E8705C" />
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!--  Accent is identical in both themes — it is the brand, not a surface.  -->
+    <Color x:Key="RayPulse.AccentColor">#F15A2B</Color>
+    <Color x:Key="RayPulse.AccentLightColor">#FF7A45</Color>
+    <SolidColorBrush x:Key="RayPulse.Accent" Color="#F15A2B" />
+    <SolidColorBrush x:Key="RayPulse.AccentLight" Color="#FF7A45" />
+    <SolidColorBrush x:Key="RayPulse.AccentDeep" Color="#D4441C" />
+    <SolidColorBrush x:Key="RayPulse.OnAccent" Color="#FFFFFF" />
+
+    <LinearGradientBrush x:Key="RayPulse.AccentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#F15A2B" />
+        <GradientStop Offset="1" Color="#FF7A45" />
+    </LinearGradientBrush>
+
+    <!--
+        The spec asks for a rounded geometric sans. Quicksand ships with the app under
+        an open font licence; Segoe UI and the bundled Noto follow it so Persian, CJK
+        and emoji in server names still render.
+    -->
+    <FontFamily x:Key="RayPulse.Font">avares://v2rayN/Assets/Fonts#Quicksand</FontFamily>
+
+    <!--  The log reads as a terminal, so it gets a terminal's typeface.  -->
+    <FontFamily x:Key="RayPulse.Mono">Cascadia Mono,Consolas,Courier New,monospace</FontFamily>
+
+    <!--
+        Terminal surface: green phosphor on near-black, held the same in light and dark
+        theme because a console that follows the app theme stops looking like a console.
+    -->
+    <SolidColorBrush x:Key="RayPulse.Terminal.Background" Color="#050A06" />
+    <SolidColorBrush x:Key="RayPulse.Terminal.Foreground" Color="#3BFF6E" />
+    <SolidColorBrush x:Key="RayPulse.Terminal.Gutter" Color="#1C6B32" />
+    <SolidColorBrush x:Key="RayPulse.Terminal.Border" Color="#10381B" />
+    <SolidColorBrush x:Key="RayPulse.Terminal.Chrome" Color="#08170C" />
+    <SolidColorBrush x:Key="RayPulse.Terminal.Selection" Color="#2633FF6E" />
+
+    <!--  8px grid, radii from the spec's scale, tightened for a desktop tool.  -->
+    <CornerRadius x:Key="RayPulse.RadiusCard">14</CornerRadius>
+    <CornerRadius x:Key="RayPulse.RadiusSmall">10</CornerRadius>
+    <CornerRadius x:Key="RayPulse.RadiusChip">8</CornerRadius>
+    <CornerRadius x:Key="RayPulse.RadiusPill">999</CornerRadius>
+
+    <!--  Buttons are softly rounded rather than full pills.  -->
+    <CornerRadius x:Key="RayPulse.RadiusButton">20</CornerRadius>
+
+    <Thickness x:Key="RayPulse.PadCard">16</Thickness>
+    <Thickness x:Key="RayPulse.PadControl">14,7</Thickness>
+    <Thickness x:Key="RayPulse.PadChip">10,3</Thickness>
+
+    <x:Double x:Key="RayPulse.SizeDisplay">24</x:Double>
+    <x:Double x:Key="RayPulse.SizeMetric">18</x:Double>
+    <x:Double x:Key="RayPulse.SizeCaption">11</x:Double>
+
+    <!--
+        Switches: Semi's default "on" state is green. Rather than reimplement the
+        template — Avalonia requires specific part names and the animation is wired to
+        them — just repaint the brushes its own template already reads.
+    -->
+    <SolidColorBrush x:Key="ToggleSwitchContainerCheckedDefaultBackground" Color="#F15A2B" />
+    <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPointeroverBackground" Color="#FF7A45" />
+    <SolidColorBrush x:Key="ToggleSwitchContainerCheckedPressedBackground" Color="#D4441C" />
+
+</ResourceDictionary>

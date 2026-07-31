@@ -92,6 +92,12 @@ public class Global
     public const string XrayLocalAsset = "XRAY_LOCATION_ASSET";
     public const string XrayLocalCert = "XRAY_LOCATION_CERT";
     public const int SpeedTestPageSize = 1000;
+
+    /// <summary>
+    /// Servers pinged simultaneously within one batch. See SpeedTestItem.PingConcurrencyCount
+    /// for why an unbounded fan-out turns a whole batch into -1.
+    /// </summary>
+    public const int DefaultPingConcurrency = 50;
     public const string LinuxBash = "/bin/bash";
     public const string StringTrue = "true";
     public const string StringFalse = "false";
@@ -516,12 +522,17 @@ public class Global
         "none"
     ];
 
+    /// <summary>
+    /// Log level colours, kept inside a green phosphor family so the log panel reads as a
+    /// terminal. Only error breaks out of the family — it has to be findable at a glance
+    /// while scrolling.
+    /// </summary>
     public static readonly Dictionary<string, string> LogLevelColors = new()
     {
-        { "debug",   "#6C757D" },
-        { "info",    "#2ECC71" },
-        { "warning", "#FFA500" },
-        { "error",   "#E74C3C" },
+        { "debug",   "#2F7A45" },
+        { "info",    "#3BFF6E" },
+        { "warning", "#C8FF4D" },
+        { "error",   "#FF5A47" },
     };
 
     public static readonly List<string> InboundTags =
@@ -645,7 +656,15 @@ public class Global
         { ECoreType.overtls, "ShadowsocksR-Live/overtls" },
         { ECoreType.shadowquic, "spongebob888/shadowquic" },
         { ECoreType.mieru, "enfein/mieru" },
-        { ECoreType.v2rayN, "2dust/v2rayN" },
+        // This fork's own releases, not upstream's.
+        //
+        // An app update replaces v2rayN.exe and ServiceLib.dll wholesale, and both the
+        // Auto Mode feature and the RayPulse styling are compiled into them — pulling an
+        // upstream build would silently revert the app to stock. Pointing the updater at
+        // this fork means "check for update" delivers a build that still has them.
+        // The proxy cores and geo files keep updating from their own upstream repos,
+        // since those are separate entries above.
+        { ECoreType.v2rayN, "morpheusadam/RayPulse" },
     };
 
     public static readonly List<string> OtherGeoUrls =

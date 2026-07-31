@@ -1,0 +1,52 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Light palette, taken directly from the design spec's colour table.
+        Accent orange is the only saturated colour in the system; everything else is
+        neutral, so anything tinted orange reads as "this is the thing to act on".
+        Palette.Dark.xaml defines the same keys and is swapped in at runtime.
+    -->
+
+    <Color x:Key="RayPulse.Color.Accent">#F15A2B</Color>
+    <Color x:Key="RayPulse.Color.AccentLight">#FF7A45</Color>
+
+    <!--  Surfaces  -->
+    <SolidColorBrush x:Key="RayPulse.Brush.Background" Color="#EFEFED" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Card" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="RayPulse.Brush.CardMuted" Color="#E7E6E3" />
+    <SolidColorBrush x:Key="RayPulse.Brush.CardDark" Color="#242426" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Sidebar" Color="#28282B" />
+
+    <!--  Text  -->
+    <SolidColorBrush x:Key="RayPulse.Brush.TextPrimary" Color="#151515" />
+    <SolidColorBrush x:Key="RayPulse.Brush.TextSecondary" Color="#9A9A9E" />
+    <SolidColorBrush x:Key="RayPulse.Brush.TextOnDark" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="RayPulse.Brush.TextOnAccent" Color="#FFFFFF" />
+
+    <!--  Lines and fills  -->
+    <SolidColorBrush x:Key="RayPulse.Brush.Hairline" Color="#E2E1DE" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Track" Color="#E2E1DE" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Hover" Color="#00000010" />
+    <SolidColorBrush x:Key="RayPulse.Brush.SelectionRow" Color="#F15A2B" Opacity="0.10" />
+
+    <!--  Accent  -->
+    <SolidColorBrush x:Key="RayPulse.Brush.Accent" Color="#F15A2B" />
+    <SolidColorBrush x:Key="RayPulse.Brush.AccentSoft" Color="#F15A2B" Opacity="0.14" />
+
+    <LinearGradientBrush x:Key="RayPulse.Brush.AccentGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#F15A2B" />
+        <GradientStop Offset="1" Color="#FF7A45" />
+    </LinearGradientBrush>
+
+    <!--
+        Latency and throughput need a good/ok/poor reading that a single accent cannot
+        carry. These are deliberately desaturated so they sit beside the orange without
+        competing with it.
+    -->
+    <SolidColorBrush x:Key="RayPulse.Brush.Good" Color="#2E9E6B" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Fair" Color="#C79A2E" />
+    <SolidColorBrush x:Key="RayPulse.Brush.Poor" Color="#D2533F" />
+
+</ResourceDictionary>

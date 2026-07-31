@@ -306,6 +306,24 @@
                             </MenuItem>
                         </Menu>
 
+                        <Button
+                            x:Name="btnAutoMode"
+                            Margin="{StaticResource MarginLeftRight8}"
+                            Background="Orange"
+                            BorderBrush="Orange"
+                            Content="automode"
+                            Foreground="Black"
+                            Style="{StaticResource DefButton}"
+                            ToolTip="Sample subscription sources, test what really works, keep the fastest 10" />
+
+                        <Button
+                            x:Name="btnAutoModeSources"
+                            Padding="4"
+                            Style="{StaticResource MaterialDesignToolButton}"
+                            ToolTip="Edit the subscription source list">
+                            <materialDesign:PackIcon VerticalAlignment="Center" Kind="NoteEditOutline" />
+                        </Button>
+
                         <materialDesign:PopupBox
                             Padding="-2"
                             HorizontalAlignment="Right"

@@ -13,6 +13,7 @@ public class SimpleViewLocator : IDataTemplate
     private SimpleViewLocator()
     {
         RegisterViewFactory<AddGroupServerViewModel, AddGroupServerWindow>();
+        RegisterViewFactory<AutoModeSourcesViewModel, AutoModeSourcesWindow>();
         RegisterViewFactory<AddServer2ViewModel, AddServer2Window>();
         RegisterViewFactory<AddServerViewModel, AddServerWindow>();
         RegisterViewFactory<BackupAndRestoreViewModel, BackupAndRestoreView>();

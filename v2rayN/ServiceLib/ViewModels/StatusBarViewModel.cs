@@ -506,25 +506,26 @@ public class StatusBarViewModel : MyReactiveObject
 
     public async Task InboundDisplayStatus()
     {
+        // Show the address as something that can be pasted straight into another app's
+        // proxy settings, rather than as the protocol name and a bare port number.
         StringBuilder sb = new();
-        sb.Append($"[{EInboundProtocol.mixed}:{AppManager.Instance.GetLocalPort(EInboundProtocol.socks)}");
+        sb.Append($"{Global.Loopback}:{AppManager.Instance.GetLocalPort(EInboundProtocol.socks)}");
         if (_config.Inbound.First().SecondLocalPortEnabled)
         {
-            sb.Append($",{AppManager.Instance.GetLocalPort(EInboundProtocol.socks2)}");
+            sb.Append($", {AppManager.Instance.GetLocalPort(EInboundProtocol.socks2)}");
         }
-        sb.Append(']');
-        InboundDisplay = $"{ResUI.LabLocal}:{sb}";
+        InboundDisplay = $"{ResUI.LabLocal} · {sb}";
 
         if (_config.Inbound.First().AllowLANConn)
         {
-            var lan = _config.Inbound.First().NewPort4LAN
-                ? $"[{EInboundProtocol.mixed}:{AppManager.Instance.GetLocalPort(EInboundProtocol.socks3)}]"
-                : $"[{EInboundProtocol.mixed}:{AppManager.Instance.GetLocalPort(EInboundProtocol.socks)}]";
-            InboundLanDisplay = $"{ResUI.LabLAN}:{lan}";
+            var port = _config.Inbound.First().NewPort4LAN
+                ? AppManager.Instance.GetLocalPort(EInboundProtocol.socks3)
+                : AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
+            InboundLanDisplay = $"{ResUI.LabLAN} · :{port}";
         }
         else
         {
-            InboundLanDisplay = $"{ResUI.LabLAN}:{Global.None}";
+            InboundLanDisplay = $"{ResUI.LabLAN} · off";
         }
         await Task.CompletedTask;
     }

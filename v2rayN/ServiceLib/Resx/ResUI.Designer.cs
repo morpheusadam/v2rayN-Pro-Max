@@ -2570,7 +2570,16 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("SpeedtestingSkip", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   查找类似 Skipped {0} server(s) the core rejected, so the rest of the batch could be tested. 的本地化字符串。
+        /// </summary>
+        public static string SpeedtestingSkippedIncompatible {
+            get {
+                return ResourceManager.GetString("SpeedtestingSkippedIncompatible", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   查找类似 Test terminating... 的本地化字符串。
         /// </summary>

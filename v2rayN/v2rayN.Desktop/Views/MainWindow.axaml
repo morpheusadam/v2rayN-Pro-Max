@@ -102,6 +102,30 @@
                 </Menu>
 
                 <Button
+                    x:Name="btnAutoModeSources"
+                    Classes="RayPulseIcon"
+                    DockPanel.Dock="Right"
+                    ToolTip.Tip="Auto Mode settings — sources, how many to keep, protocol and country">
+                    <PathIcon Data="{StaticResource automode_settings}" />
+                </Button>
+
+                <Button
+                    x:Name="btnAutoMode"
+                    Classes="RayPulseAccent"
+                    Content="automode"
+                    DockPanel.Dock="Right"
+                    ToolTip.Tip="Sample subscription sources, test what really works, keep the fastest 10" />
+
+                <!--  Docked after the button, so it sits to its left and vanishes when idle.  -->
+                <TextBlock
+                    x:Name="txtAutoModeCountdown"
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Classes="RayPulseCountdown"
+                    DockPanel.Dock="Right"
+                    IsVisible="False" />
+
+                <Button
                     x:Name="btnNewUpdate"
                     Margin="{StaticResource MarginLr8}"
                     HorizontalAlignment="Left"

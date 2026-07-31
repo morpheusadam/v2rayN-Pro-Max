@@ -310,6 +310,19 @@ public class CheckUpdateViewModel : MyReactiveObject
 
     private async Task UpgradeN()
     {
+        // Second line of defence behind CoreInfoManager.IsCheckUpdateSupported.
+        //
+        // This is the one code path that hands the install directory to AmazTool, which
+        // overwrites the executable and every assembly beside it. That would replace this
+        // fork with a stock build and take Auto Mode, the styling and the bug fixes with
+        // it, so it stays shut regardless of how it was reached — a hand-edited config,
+        // a stale selection saved from before, or a future refactor of the dialog.
+        if (!CoreInfoManager.Instance.IsCheckUpdateSupported(_v2rayN))
+        {
+            await UpdateView(_v2rayN, ResUI.MsgNotSupport);
+            return;
+        }
+
         try
         {
             var fileName = _lstUpdated.FirstOrDefault(x => x.CoreType == _v2rayN)?.FileName;

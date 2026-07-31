@@ -139,6 +139,10 @@ public static class ConfigHandler
         {
             config.SpeedTestItem.MixedConcurrencyCount = 5;
         }
+        if (config.SpeedTestItem.PingConcurrencyCount is null or < 1)
+        {
+            config.SpeedTestItem.PingConcurrencyCount = Global.DefaultPingConcurrency;
+        }
         if (config.SpeedTestItem.UdpTestTarget.IsNullOrEmpty())
         {
             config.SpeedTestItem.UdpTestTarget = Global.UdpTestTargets.First();

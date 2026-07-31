@@ -49,6 +49,11 @@ public class MainWindowViewModel : MyReactiveObject
     public ReactiveCommand<Unit, Unit> SubGroupUpdateCmd { get; }
     public ReactiveCommand<Unit, Unit> SubGroupUpdateViaProxyCmd { get; }
 
+    //Auto mode
+    public ReactiveCommand<Unit, Unit> AutoModeCmd { get; }
+
+    public ReactiveCommand<Unit, Unit> AutoModeSourcesCmd { get; }
+
     //Setting
     public ReactiveCommand<Unit, Unit> OptionSettingCmd { get; }
 
@@ -71,6 +76,18 @@ public class MainWindowViewModel : MyReactiveObject
 
     [Reactive]
     public bool BlReloadEnabled { get; set; }
+
+    /// <summary>False while an Auto Mode run is in flight, so the button cannot re-enter.</summary>
+    [Reactive]
+    public bool BlAutoModeEnabled { get; set; } = true;
+
+    /// <summary>Rough time left in the current Auto Mode run, e.g. "2:15". Empty when idle.</summary>
+    [Reactive]
+    public string AutoModeCountdown { get; set; } = string.Empty;
+
+    /// <summary>Drives the countdown's visibility so it disappears entirely once done.</summary>
+    [Reactive]
+    public bool BlAutoModeCountdownVisible { get; set; }
 
     [Reactive]
     public bool ShowClashUI { get; set; }
@@ -188,6 +205,10 @@ public class MainWindowViewModel : MyReactiveObject
         {
             await UpdateSubscriptionProcess(_config.SubIndexId, true);
         });
+
+        //Auto mode
+        AutoModeCmd = ReactiveCommand.CreateFromTask(AutoModeRun);
+        AutoModeSourcesCmd = ReactiveCommand.CreateFromTask(AutoModeSourcesAsync);
 
         //Setting
         OptionSettingCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -550,6 +571,111 @@ public class MainWindowViewModel : MyReactiveObject
     }
 
     #endregion Subscription
+
+    #region Auto mode
+
+    private AutoModeService? _autoModeService;
+    private DateTime _autoModeFinishEstimate;
+    private IDisposable? _autoModeTicker;
+
+    /// <summary>
+    /// Sample a few subscription sources, find the servers that actually tunnel, and
+    /// leave the fastest ones in the Auto Mode group. Pressing the button while a run is
+    /// in flight stops that run instead of starting a second one.
+    /// </summary>
+    public async Task AutoModeRun()
+    {
+        if (!BlAutoModeEnabled)
+        {
+            _autoModeService?.Stop();
+            return;
+        }
+
+        BlAutoModeEnabled = false;
+        StartAutoModeCountdown();
+
+        try
+        {
+            _autoModeService = new AutoModeService(_config, estimate: SetAutoModeEstimate);
+            var result = await Task.Run(async () => await _autoModeService.RunAsync());
+
+            await RefreshServersDispatcherAsync();
+            await RefreshSubscriptions();
+            NoticeManager.Instance.Enqueue(result.Message);
+        }
+        finally
+        {
+            StopAutoModeCountdown();
+            _autoModeService = null;
+            BlAutoModeEnabled = true;
+        }
+    }
+
+    /// <summary>
+    /// A run takes minutes, so show what is left rather than an unbounded spinner. The
+    /// service revises the target as it measures its own stages; this only counts down
+    /// towards whatever the latest revision said.
+    /// </summary>
+    private void StartAutoModeCountdown()
+    {
+        _autoModeFinishEstimate = DateTime.UtcNow.AddSeconds(150);
+        BlAutoModeCountdownVisible = true;
+        _autoModeTicker?.Dispose();
+        _autoModeTicker = Observable
+            .Interval(TimeSpan.FromSeconds(1))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(_ =>
+            {
+                var left = _autoModeFinishEstimate - DateTime.UtcNow;
+
+                // Never show 0:00 while work is still going on — a stalled zero reads as
+                // a hang. Hold at a few seconds until the run actually reports back.
+                if (left < TimeSpan.FromSeconds(5))
+                {
+                    left = TimeSpan.FromSeconds(5);
+                }
+                AutoModeCountdown = $"~{left.Minutes}:{left.Seconds:00}";
+            });
+    }
+
+    private void SetAutoModeEstimate(TimeSpan remaining)
+    {
+        // Only ever move the finish line outward on a large jump, so the display does not
+        // bounce between stages; small corrections apply immediately.
+        var proposed = DateTime.UtcNow.Add(remaining);
+        if (proposed > _autoModeFinishEstimate || (_autoModeFinishEstimate - proposed) > TimeSpan.FromSeconds(20))
+        {
+            _autoModeFinishEstimate = proposed;
+        }
+    }
+
+    private void StopAutoModeCountdown()
+    {
+        _autoModeTicker?.Dispose();
+        _autoModeTicker = null;
+        BlAutoModeCountdownVisible = false;
+        AutoModeCountdown = string.Empty;
+    }
+
+    public async Task AutoModeSourcesAsync()
+    {
+        try
+        {
+            var vm = new AutoModeSourcesViewModel();
+            var shown = await AppManager.Instance.WindowDialog.ShowDialogAsync(vm);
+            if (!shown)
+            {
+                NoticeManager.Instance.SendMessageEx("Auto Mode settings window could not be opened.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog("AutoModeSources", ex);
+            NoticeManager.Instance.SendMessageEx($"Auto Mode settings failed: {ex.Message}");
+        }
+    }
+
+    #endregion Auto mode
 
     #region Setting
 

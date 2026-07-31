@@ -53,8 +53,7 @@
                 x:Name="togAutoRefresh"
                 Margin="{StaticResource MarginLr8}"
                 HorizontalAlignment="Left"
-                IsChecked="True"
-                Theme="{DynamicResource SimpleToggleSwitch}" />
+                IsChecked="True" />
             <TextBlock
                 Margin="{StaticResource MarginLr8}"
                 VerticalAlignment="Center"
@@ -63,19 +62,38 @@
                 x:Name="togScrollToEnd"
                 Margin="{StaticResource MarginLr8}"
                 HorizontalAlignment="Left"
-                IsChecked="True"
-                Theme="{DynamicResource SimpleToggleSwitch}" />
+                IsChecked="True" />
         </WrapPanel>
 
-        <avaloniaEdit:TextEditor
-            Name="txtMsg"
-            Margin="{StaticResource Margin8}"
-            IsReadOnly="True"
-            VerticalScrollBarVisibility="Auto"
-            WordWrap="True">
-            <avaloniaEdit:TextEditor.Options>
-                <avaloniaEdit:TextEditorOptions AllowScrollBelowDocument="False" />
-            </avaloniaEdit:TextEditor.Options>
+        <!--  Console shell: title strip above, monospace body with a line-number gutter.  -->
+        <Border Margin="8,4,8,8" Classes="RayPulseTerminal">
+            <DockPanel>
+                <Border Classes="RayPulseTerminalChrome" DockPanel.Dock="Top">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Ellipse
+                            Width="9"
+                            Height="9"
+                            VerticalAlignment="Center"
+                            Fill="#F15A2B" />
+                        <TextBlock Classes="RayPulseTerminalTitle" Text="v2rayN — core log" />
+                    </StackPanel>
+                </Border>
+
+                <avaloniaEdit:TextEditor
+                    Name="txtMsg"
+                    Padding="10,8"
+                    Background="Transparent"
+                    FontFamily="{DynamicResource RayPulse.Mono}"
+                    FontSize="12"
+                    Foreground="{DynamicResource RayPulse.Terminal.Foreground}"
+                    IsReadOnly="True"
+                    LineNumbersForeground="{DynamicResource RayPulse.Terminal.Gutter}"
+                    ShowLineNumbers="True"
+                    VerticalScrollBarVisibility="Auto"
+                    WordWrap="True">
+                    <avaloniaEdit:TextEditor.Options>
+                        <avaloniaEdit:TextEditorOptions AllowScrollBelowDocument="False" />
+                    </avaloniaEdit:TextEditor.Options>
             <avaloniaEdit:TextEditor.ContextFlyout>
                 <MenuFlyout>
                     <MenuItem
@@ -96,9 +114,11 @@
                         x:Name="menuMsgViewClear"
                         Click="menuMsgViewClear_Click"
                         Header="{x:Static resx:ResUI.menuMsgViewClear}" />
-                </MenuFlyout>
-            </avaloniaEdit:TextEditor.ContextFlyout>
-        </avaloniaEdit:TextEditor>
+                        </MenuFlyout>
+                    </avaloniaEdit:TextEditor.ContextFlyout>
+                </avaloniaEdit:TextEditor>
+            </DockPanel>
+        </Border>
 
     </DockPanel>
 </UserControl>

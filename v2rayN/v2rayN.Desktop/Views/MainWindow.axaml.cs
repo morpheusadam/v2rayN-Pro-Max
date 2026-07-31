@@ -31,6 +31,17 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
         menuClose.Click += MenuClose_Click;
 
+        // A direct handler rather than BindCommand: the ReactiveUI binding did not reach
+        // a button whose content is a PathIcon, and the settings window simply never
+        // appeared with no error to show for it.
+        btnAutoModeSources.Click += async (_, _) =>
+        {
+            if (ViewModel is not null)
+            {
+                await ViewModel.AutoModeSourcesAsync();
+            }
+        };
+
         conTheme.Content ??= new ThemeSettingView();
 
         this.WhenActivated(disposables =>
@@ -73,6 +84,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
             this.BindCommand(ViewModel, vm => vm.RegionalPresetDefaultCmd, v => v.menuRegionalPresetsDefault).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetRussiaCmd, v => v.menuRegionalPresetsRussia).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetIranCmd, v => v.menuRegionalPresetsIran).DisposeWith(disposables);
+
+            //auto mode
+            this.BindCommand(ViewModel, vm => vm.AutoModeCmd, v => v.btnAutoMode).DisposeWith(disposables);
+            this.OneWayBind(ViewModel, vm => vm.AutoModeCountdown, v => v.txtAutoModeCountdown.Text).DisposeWith(disposables);
+            this.OneWayBind(ViewModel, vm => vm.BlAutoModeCountdownVisible, v => v.txtAutoModeCountdown.IsVisible).DisposeWith(disposables);
 
             this.BindCommand(ViewModel, vm => vm.ReloadCmd, v => v.menuReload).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.BlReloadEnabled, v => v.menuReload.IsEnabled).DisposeWith(disposables);

@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="Assets/GlobalResources.axaml" />
+                <ResourceInclude Source="Assets/RayPulseTokens.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
@@ -22,6 +23,9 @@
         <StyleInclude Source="Assets/GlobalStyles.axaml" />
         <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
         <dialogHost:DialogHostStyles />
+
+        <!--  Last, so the RayPulse selectors win over the Semi defaults above.  -->
+        <StyleInclude Source="Assets/RayPulse.axaml" />
 
         <Style Selector="dialogHost|DialogHost">
             <Setter Property="OverlayBackground" Value="{DynamicResource SemiColorOverlayBackground}" />

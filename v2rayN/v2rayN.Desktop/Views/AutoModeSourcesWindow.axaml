@@ -1,0 +1,323 @@
+<Window
+    x:Class="v2rayN.Desktop.Views.AutoModeSourcesWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dto="clr-namespace:ServiceLib.Models.Dto;assembly=ServiceLib"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="Auto Mode — settings"
+    Width="1180"
+    Height="820"
+    x:DataType="vms:AutoModeSourcesViewModel"
+    Icon="/Assets/v2rayN.ico"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Panel>
+        <DockPanel Margin="16">
+
+            <!--  Header  -->
+            <Grid ColumnDefinitions="*,Auto" DockPanel.Dock="Top">
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Classes="RayPulseDisplay" Text="Auto Mode" />
+                    <TextBlock
+                        x:Name="txtSummary"
+                        Classes="RayPulseCaption"
+                        Text="" />
+                </StackPanel>
+
+                <Button
+                    x:Name="btnGuide"
+                    Grid.Column="1"
+                    VerticalAlignment="Top"
+                    Classes="RayPulseIcon"
+                    ToolTip.Tip="How to paste subscription links">
+                    <PathIcon Data="{StaticResource automode_help}" />
+                </Button>
+            </Grid>
+
+            <!--  Actions  -->
+            <StackPanel
+                Margin="0,16,0,0"
+                DockPanel.Dock="Bottom"
+                Orientation="Horizontal"
+                Spacing="8">
+                <Button
+                    x:Name="btnSave"
+                    Classes="RayPulseAccent"
+                    Content="Save" />
+                <Button x:Name="btnImportFile" Content="Import file" />
+                <Button x:Name="btnResetStats" Content="Reset stats" />
+                <Button
+                    x:Name="btnClose"
+                    Classes="RayPulseGhost"
+                    Content="Close" />
+            </StackPanel>
+
+            <!--  What a run should produce  -->
+            <Border
+                Margin="0,14,0,0"
+                Classes="RayPulseCard"
+                DockPanel.Dock="Top">
+                <StackPanel Spacing="8">
+                    <TextBlock Classes="RayPulseSection" Text="What to keep" />
+
+                    <Grid ColumnDefinitions="Auto,16,*,16,*" RowDefinitions="Auto,Auto">
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Classes="RayPulseCaption"
+                            Text="Servers to keep" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Classes="RayPulseCaption"
+                            Text="Protocol" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Classes="RayPulseCaption"
+                            Text="Country" />
+
+                        <NumericUpDown
+                            x:Name="numTopCount"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Width="130"
+                            Margin="0,4,0,0"
+                            Increment="1"
+                            Maximum="50"
+                            Minimum="1"
+                            ParsingNumberStyle="Integer" />
+
+                        <!--
+                            Avalonia has no multi-select ComboBox, so these are dropdown
+                            buttons over a tick list. Ticking nothing leaves them reading
+                            "Any", which is exactly what an empty filter does.
+                        -->
+                        <Button
+                            x:Name="btnProtocol"
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Classes="RayPulseDropdown">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock
+                                    x:Name="txtProtocolSummary"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    TextTrimming="CharacterEllipsis" />
+                                <PathIcon
+                                    Grid.Column="1"
+                                    Width="10"
+                                    Height="10"
+                                    Data="{StaticResource automode_caret}" />
+                            </Grid>
+                            <Button.Flyout>
+                                <!--  Left-aligned under the button and matched to its width, so it reads as the button opening rather than as a menu appearing nearby.  -->
+                                <Flyout Placement="BottomEdgeAlignedLeft">
+                                    <ScrollViewer MaxHeight="320" Width="{Binding #btnProtocol.Bounds.Width}">
+                                        <ItemsControl x:Name="lstProtocolChoices">
+                                            <ItemsControl.ItemTemplate>
+                                                <!--  ItemsSource is bound in code-behind, so state the row type here.  -->
+                                                <DataTemplate x:DataType="dto:FilterChoice">
+                                                    <CheckBox
+                                                        Margin="2"
+                                                        Content="{Binding Label}"
+                                                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <Button
+                            x:Name="btnCountry"
+                            Grid.Row="1"
+                            Grid.Column="4"
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Classes="RayPulseDropdown">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock
+                                    x:Name="txtCountrySummary"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    TextTrimming="CharacterEllipsis" />
+                                <PathIcon
+                                    Grid.Column="1"
+                                    Width="10"
+                                    Height="10"
+                                    Data="{StaticResource automode_caret}" />
+                            </Grid>
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedLeft">
+                                    <ScrollViewer MaxHeight="320" Width="{Binding #btnCountry.Bounds.Width}">
+                                        <ItemsControl x:Name="lstCountryChoices">
+                                            <ItemsControl.ItemTemplate>
+                                                <!--  ItemsSource is bound in code-behind, so state the row type here.  -->
+                                                <DataTemplate x:DataType="dto:FilterChoice">
+                                                    <CheckBox
+                                                        Margin="2"
+                                                        Content="{Binding Label}"
+                                                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+
+                    <TextBlock
+                        Classes="RayPulseCaption"
+                        Text="Country is matched against the address a server actually exits from, measured during the test. If too few match, the rest of the slots are filled with the fastest found anywhere."
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Grid Margin="0,14,0,0" RowDefinitions="2*,12,3*">
+
+                <!--  Source list, styled like a code editor  -->
+                <Border Grid.Row="0" Classes="RayPulseTerminal">
+                    <DockPanel>
+                        <Border Classes="RayPulseTerminalChrome" DockPanel.Dock="Top">
+                            <TextBlock Classes="RayPulseTerminalTitle" Text="subscriptions.txt — one link per line" />
+                        </Border>
+                        <TextBox
+                            x:Name="txtSources"
+                            Padding="10,8"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            VerticalContentAlignment="Top"
+                            AcceptsReturn="True"
+                            AcceptsTab="False"
+                            Classes="RayPulseCode"
+                            TextWrapping="NoWrap" />
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
+
+                <!--  Per-source health, with a tick box to park a link without losing its history  -->
+                <Border Grid.Row="2" Classes="RayPulseCard">
+                    <DataGrid
+                        x:Name="lstStats"
+                        AutoGenerateColumns="False"
+                        CanUserResizeColumns="True"
+                        GridLinesVisibility="Horizontal"
+                        HeadersVisibility="Column"
+                        IsReadOnly="False"
+                        ItemsSource="{Binding Stats}">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn
+                                Width="70"
+                                Binding="{Binding Enabled}"
+                                Header="Use" />
+                            <DataGridTextColumn
+                                Width="90"
+                                Binding="{Binding Quality}"
+                                Header="Quality"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="120"
+                                Binding="{Binding Green}"
+                                Header="Working"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="90"
+                                Binding="{Binding Configs}"
+                                Header="Configs"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="120"
+                                Binding="{Binding LastTried}"
+                                Header="Last tried"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="130"
+                                Binding="{Binding State}"
+                                Header="State"
+                                IsReadOnly="True" />
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Url}"
+                                Header="URL"
+                                IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </DockPanel>
+
+        <!--  Guide, shown over the window rather than in a separate dialog  -->
+        <Border
+            x:Name="guideOverlay"
+            Background="#B0000000"
+            IsVisible="False">
+            <Border
+                Width="720"
+                MaxHeight="620"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Classes="RayPulseCard">
+                <DockPanel>
+                    <TextBlock
+                        Classes="RayPulseSection"
+                        DockPanel.Dock="Top"
+                        Text="How to add subscription links" />
+
+                    <Button
+                        x:Name="btnGuideClose"
+                        Margin="0,14,0,0"
+                        HorizontalAlignment="Right"
+                        Classes="RayPulseAccent"
+                        Content="Got it"
+                        DockPanel.Dock="Bottom" />
+
+                    <ScrollViewer Margin="0,10,0,0">
+                        <StackPanel Spacing="12">
+                            <TextBlock
+                                Classes="RayPulseCaption"
+                                Text="Paste one link per line. Anything that is not an http or https link is ignored, so you can paste straight from a channel or a README without cleaning it up first."
+                                TextWrapping="Wrap" />
+
+                            <Border Classes="RayPulseTerminal">
+                                <TextBlock
+                                    Padding="12"
+                                    Classes="RayPulseCodeBlock"
+                                    Text="https://raw.githubusercontent.com/user/repo/main/sub.txt&#10;https://example.com/sub?token=abc&#10;&#10;Pack 3: https://raw.githubusercontent.com/user/repo/main/Sub3.txt&#10;https://github.com/user/repo/blob/main/sub.txt" />
+                            </Border>
+
+                            <TextBlock
+                                Classes="RayPulseCaption"
+                                Text="Notes"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Classes="RayPulseCaption"
+                                Text="•  A github.com/…/blob/… link points at a web page, not the list. It is rewritten to raw.githubusercontent.com automatically.&#10;•  Labels such as &quot;Pack 3:&quot; and trailing commas are stripped, so a pasted table still works.&#10;•  Template rows containing &lt;CODE&gt; or YOUR_USERNAME are skipped, because they are not real links.&#10;•  The link itself may contain plain text or base64, and vmess / vless / trojan / ss / hysteria2 / tuic entries, or Clash YAML. All of those are read."
+                                TextWrapping="Wrap" />
+
+                            <TextBlock
+                                Classes="RayPulseCaption"
+                                Text="How a run uses them"
+                                TextWrapping="Wrap" />
+                            <TextBlock
+                                Classes="RayPulseCaption"
+                                Text="Each run samples a handful of your links rather than all of them, tests what they contain, and remembers which ones produced servers that actually worked. Good links get picked more often; links that stop working are tried less and eventually parked, with an occasional retry in case they come back. Untick a link here to keep it in the list but leave it out of every run."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Border>
+    </Panel>
+</Window>

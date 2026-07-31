@@ -1,78 +1,251 @@
-# v2rayN
+<div align="center">
 
-### A GUI client for Windows, Linux and macOS. Support [Xray](https://github.com/XTLS/Xray-core) and [sing-box](https://github.com/SagerNet/sing-box) and [others](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
+<img src="docs/images/banner.svg" alt="v2rayN Pro Max - automatic server selection for V2Ray and Xray on Windows" width="100%">
 
-[![CodeFactor](https://www.codefactor.io/repository/github/2dust/v2rayn/badge)](https://www.codefactor.io/repository/github/2dust/v2rayn)
-[![Release](https://img.shields.io/github/v/release/2dust/v2rayN?logo=github&label=Release)](https://github.com/2dust/v2rayN/releases)
-[![Downloads](https://img.shields.io/github/downloads/2dust/v2rayN/latest/total?logo=github&label=Downloads)](https://github.com/2dust/v2rayN/releases)
-[![Telegram](https://img.shields.io/badge/Telegram-Chat-26A5E4?logo=telegram)](https://t.me/v2rayn)
- 
-[![Windows](https://img.shields.io/badge/Windows-supported-0078D6?logo=windows)](https://github.com/2dust/v2rayN) 
-[![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=000)](https://github.com/2dust/v2rayN) 
-[![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple)](https://github.com/2dust/v2rayN) 
-[![GPG Signed](https://img.shields.io/badge/GPG-signed-4B32C3?logo=gnuprivacyguard)](https://github.com/2dust/v2rayN)
+<h1>v2rayN Pro Max</h1>
 
+<p><strong>A V2Ray / Xray client for Windows that finds working servers by itself.</strong><br>
+Press one button. It reads your subscription links, tests what is actually alive, measures real speed, and leaves the fastest servers ready to use.</p>
 
----
+<p>
+<img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-1f1f22?style=for-the-badge&labelColor=F15A2B">
+<img alt="Based on v2rayN 7.24.4" src="https://img.shields.io/badge/based%20on-v2rayN%207.24.4-1f1f22?style=for-the-badge&labelColor=F15A2B">
+<img alt="Cores" src="https://img.shields.io/badge/cores-Xray%20%7C%20sing--box%20%7C%20mihomo-1f1f22?style=for-the-badge&labelColor=F15A2B">
+<img alt="113 tests passing" src="https://img.shields.io/badge/tests-113%20passing-1f1f22?style=for-the-badge&labelColor=2E9E6B">
+</p>
 
-## Download / 下载
+<img src="docs/images/1.png" alt="v2rayN Pro Max main window showing the ten fastest V2Ray servers ranked by measured download speed" width="92%">
 
-Download the latest release here:
-
-在这里下载最新版本：
-
-[https://github.com/2dust/v2rayN/releases](https://github.com/2dust/v2rayN/releases)
-
-
-> [!TIP]
-> v2rayN is the desktop version. For the mobile version, please visit the v2rayNG \
-> v2rayN 是电脑版，手机版请访问 v2rayNG
->
-> https://github.com/2dust/v2rayNG
+</div>
 
 ---
 
-## Documentation / 使用文档
+## The problem this solves
 
-Read the Wiki for usage guides and configuration details.
+Anyone using free V2Ray or Xray subscriptions knows the routine. Open the client. Update the
+subscriptions. Wait. Run a ping test on a few hundred servers. Wait again. Sort the column.
+Try one. It is dead. Try the next. Run a speed test on whatever survived. Pick one.
 
-请阅读 Wiki 获取使用说明和配置教程。
+Tomorrow the good ones have stopped working and you do it all over again.
 
-[https://github.com/2dust/v2rayN/wiki](https://github.com/2dust/v2rayN/wiki)
-
----
-
-## Supported Platforms / 支持平台
-
-| Platform / 平台 | x64 | x86 | arm64 | riscv64 | loong64 |
-| --- | --- | --- | --- | --- | --- |
-| Windows | ✅ | ✅ | ✅ | - | - |
-| Linux | ✅ | - | ✅ | ✅ | ✅ |
-| macOS | ✅ | - | ✅ | - | - |
+That is an hour a week spent doing something a computer should be doing. **Auto Mode does it
+in one press**, and it keeps doing it, so you always have a short list of servers that were
+verified minutes ago rather than a long list that was true last week.
 
 ---
 
-## GPG Verification / GPG 签名校验
+## Auto Mode
 
-Release files are signed with GPG to verify authenticity and integrity, helping prevent mirror, ISP, or CDN hijacking.
+<div align="center">
+<img src="docs/images/2.png" alt="Auto Mode results: ten fastest servers with measured speed, latency and country" width="92%">
+</div>
 
-发布文件已使用 GPG 签名，可用于校验文件真实性与完整性，预防镜像站、运营商或 CDN 劫持。
+<br>
 
-### Fingerprint / 公钥指纹
+One press runs the whole pipeline:
 
-```text
-7694 5E9F 3E9A 168F 8070 F195 805D 661C
-134D FAF6 8903 C199 463C 31E5 AE90 3AE0
+| Stage | What happens |
+|---|---|
+| **Sample** | Picks a handful of your subscription links, favouring the ones that have produced working servers before |
+| **Fetch** | Downloads them in parallel and parses every format: plain text, base64, ten URI schemes, Clash YAML, SIP008 |
+| **Filter** | Keeps only the protocols and countries you asked for, if you asked for any |
+| **Reachability** | Drops endpoints that answer nothing |
+| **Tunnel test** | Sends a real request through each server, which is the only way to know it works |
+| **Speed test** | Measures actual throughput on the survivors |
+| **Keep** | Writes the fastest into their own group, replacing the previous list |
+
+The button shows a live countdown while it runs, so you know whether to wait or walk away.
+
+### It gets better the more you use it
+
+Free subscription links decay. A link that was excellent last month goes quiet, stops
+updating, or dies outright. Auto Mode tracks each link's record and adjusts:
+
+- Links that keep producing working servers get sampled more often
+- Links that stop producing get sampled less, and are eventually parked
+- Parked links still get an occasional retry, because free sources come back as often as they vanish
+- Evidence fades over time, so a link's reputation from three months ago does not decide today's run
+
+Underneath it is a decayed Thompson sampler over your sources. In practice it means you can
+paste a thousand links, never curate them again, and the client works out which ones deserve
+its time.
+
+### Servers keep their place only by earning it
+
+Every run re-tests the servers already in your list alongside the new candidates. A server
+that was fastest yesterday and has since degraded loses its slot to something better. In
+testing, the weakest entry in the list went from 0.2 MB/s to 1.2 MB/s across two runs, purely
+because every slot has to be re-won.
+
+---
+
+## Settings
+
+<div align="center">
+<img src="docs/images/3.png" alt="Auto Mode settings: subscription source list, per-source quality statistics, protocol and country filters" width="92%">
+</div>
+
+<br>
+
+**Sources.** Paste as many links as you like, one per line. Anything that is not an http link
+is ignored, so pasting straight from a channel or a README works without cleaning it up first.
+GitHub `blob` links are rewritten to their raw form automatically.
+
+**How many to keep.** Anywhere from 1 to 50 servers.
+
+**Protocol.** VLESS, VMess, Trojan, Shadowsocks, Hysteria2, TUIC, WireGuard, AnyTLS, Naive,
+SOCKS. Tick none for any.
+
+**Country.** Matched against the address a server *actually exits from*, measured during the
+test, rather than whatever the provider wrote in its name. Provider labels are only used to
+decide what is worth testing first. If too few servers match, the remaining slots are filled
+with the fastest found anywhere rather than handing you a half-empty list.
+
+**Per-source statistics.** Quality, how many of its servers worked, how many configs it
+carries, when it was last tried, and its current state. Untick a link to leave it out of
+future runs without deleting it and losing its history.
+
+---
+
+## What is different from stock v2rayN
+
+This is a fork of [2dust/v2rayN](https://github.com/2dust/v2rayN) 7.24.4. Everything the
+original does, it still does. On top of that:
+
+### Auto Mode
+
+The whole feature above. Stock v2rayN can update subscriptions and run tests, but you drive
+every step and you decide what the results mean. Here it is one button and a short list of
+verified servers.
+
+### A long-standing test bug, fixed
+
+Anyone who has selected a thousand servers in v2rayN and pressed real ping knows the result:
+every single one comes back as -1. Test fifty at a time and it works fine. This has been
+around for years and is usually blamed on the core being unable to cope with the load.
+
+It is not. Measured against a real subscription pool: Xray accepts 992 outbounds without
+complaint, and every one of its ports is listening within a second. The actual cause is that
+recent Xray removed the `allowInsecure` option and **rejects the entire configuration file if
+any single server in it still sets that flag**. Free subscription lists are full of such
+servers. One of them appearing in a batch of a thousand is close to certain, and it takes the
+other 999 down with it.
+
+Two fixes:
+
+1. The option is no longer written into generated configurations, which removes the cause.
+2. Before a batch starts, the configuration is validated by the core itself. If the core
+   rejects a server, that one server is identified from the error message and dropped, and the
+   batch proceeds. Validating a thousand servers takes under a third of a second and needs no
+   network at all — far cheaper than the stock behaviour of repeatedly halving the batch and
+   restarting real cores until the culprit is found.
+
+Before the fix, a 120-server batch returned 0 working. After it, the same batch returned 36.
+
+### Bounded test concurrency
+
+Ping tests run in waves rather than all at once, so results appear as they arrive instead of
+in one burst at the end, and a large batch no longer starves the thread pool.
+
+### A rebuilt interface
+
+- A single accent colour, rounded geometry and one consistent typeface across every window
+- The server list is easier to scan: taller rows, alternating shading, colour-coded latency
+- The log panel is a proper console, with a monospace face, line numbers and green-on-black output
+- A grouped, labelled status bar instead of a row of unexplained controls
+- Light and dark, following the system or set explicitly
+
+### Your customisations survive
+
+Application self-update is deliberately disabled. An update replaces the executable and its
+assemblies, which would silently revert this build to stock upstream and leave your settings
+sitting there beside an application that no longer understands them.
+
+The proxy cores are a separate matter and keep updating normally. Xray, sing-box, mihomo and
+the geo rule files all continue to update from their own upstream repositories, which is where
+the fixes that actually matter arrive. To move the app itself to a newer version, rebuild from
+source.
+
+---
+
+## Install
+
+1. Download the release and extract it anywhere
+2. Run `v2rayN.exe`
+3. Open Auto Mode settings with the gear beside the automode button
+4. Paste your subscription links, or import [`sub.example.txt`](sub.example.txt) from this repository
+5. Press **automode** and wait a few minutes
+
+A run takes three to five minutes depending on how many links you have and how healthy they
+are, uses roughly fourteen percent of one core while it works, and settles back to normal
+memory afterwards.
+
+`sub.example.txt` ships with 76 public subscription links so there is something to start with.
+None of them are operated by this project.
+
+---
+
+## Build from source
+
+```
+git clone https://github.com/morpheusadam/v2rayN-Pro-Max.git
+cd v2rayN-Pro-Max/v2rayN
+dotnet build v2rayN.Desktop/v2rayN.Desktop.csproj -c Release
+```
+
+Requires the **.NET 10 SDK**. Two Windows front ends are included and share all of the logic:
+`v2rayN.Desktop` (Avalonia, the one the releases ship) and `v2rayN` (WPF).
+
+Run the tests:
+
+```
+dotnet test ServiceLib.Tests/ServiceLib.Tests.csproj
+```
+
+Regenerate the icons after replacing `tools/logo-source.png`:
+
+```
+python tools/make_icons.py
 ```
 
 ---
 
-## Community / 社区
+## How Auto Mode decides, in detail
 
-Telegram Group / Telegram 群组：
+The numbers behind the design are in [docs/automode-design.md](docs/automode-design.md). Two
+findings from measuring a real subscription pool shaped it.
 
-[https://t.me/v2rayN](https://t.me/v2rayN)
+**Reachability means almost nothing.** Eighty percent of endpoints accept a TCP connection.
+Five percent actually carry traffic. A port being open says nothing about whether the proxy
+behind it works, so reachability is only ever used to drop the completely dead.
 
-Telegram Channel / Telegram 频道：
+**Sorting candidates by lowest ping is worse than not sorting at all.** 2.1 percent of the
+lowest-latency candidates worked, against 7.5 percent of a random selection from the same
+pool. The fastest-answering hosts are CDN edges that acknowledge any connection while the
+proxy behind them is long gone. Latency is therefore never used to rank candidates, only to
+discard the unreachable.
 
-[https://t.me/github_2dust](https://t.me/github_2dust)
+---
+
+## Credits and licence
+
+Built on [2dust/v2rayN](https://github.com/2dust/v2rayN), which does the hard work of
+supporting every protocol, core and transport. Cores by
+[XTLS/Xray-core](https://github.com/XTLS/Xray-core),
+[SagerNet/sing-box](https://github.com/SagerNet/sing-box) and
+[MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo). Interface built with
+[Avalonia](https://avaloniaui.net) and [Semi.Avalonia](https://github.com/irihitech/Semi.Avalonia).
+
+Licensed under GPL-3.0, the same as upstream.
+
+### A note on the subscription links
+
+The links in `sub.example.txt` are public lists collected from GitHub and public channels.
+They are not operated, endorsed or verified by this project, and their contents change without
+notice. Auto Mode measures them rather than trusting them, which is rather the point. Use
+servers you trust for anything that matters.
+
+<div align="center">
+<br>
+<sub>Built for people who would rather use the internet than spend an hour a week testing proxies.</sub>
+</div>

@@ -21,6 +21,16 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
         });
     }
 
+    /// <summary>
+    /// Same work as <see cref="RunLoop"/> but awaitable, for callers that chain stages
+    /// and need to know when one finished before choosing the input to the next.
+    /// </summary>
+    public async Task RunAwaitableAsync(ESpeedActionType actionType, List<ProfileItem> selecteds)
+    {
+        await RunAsync(actionType, selecteds);
+        await ProfileExManager.Instance.SaveTo();
+    }
+
     public void ExitLoop()
     {
         if (!_lstExitLoop.IsEmpty)
@@ -148,15 +158,19 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
                 return;
             }
 
+            // Bounded for the same reason as the real-ping stage: a page can hold a
+            // thousand entries, and each one resolves DNS and opens a socket.
+            using var tcpSemaphore = new SemaphoreSlim(GetPingConcurrency());
             List<Task> tasks = [];
 
             foreach (var it in lst)
             {
                 if (ShouldStopTest(exitLoopKey))
                 {
-                    return;
+                    break;
                 }
 
+                await tcpSemaphore.WaitAsync();
                 tasks.Add(Task.Run(async () =>
                 {
                     try
@@ -169,6 +183,10 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
                     catch (Exception ex)
                     {
                         Logging.SaveLog(_tag, ex);
+                    }
+                    finally
+                    {
+                        tcpSemaphore.Release();
                     }
                 }));
             }
@@ -238,6 +256,13 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
             }
             await Task.Delay(1000);
 
+            // Bounded fan-out. Each real ping stands up its own HttpClient and performs
+            // two TLS round trips through a local socks port; starting a thousand at once
+            // starves the thread pool so thoroughly that every request exceeds its own
+            // timeout and the whole batch reports -1, even though the core is healthy and
+            // all its ports are listening. Testing in waves also lets rows fill in as
+            // results arrive instead of all at once at the end.
+            using var pingSemaphore = new SemaphoreSlim(GetPingConcurrency());
             List<Task> tasks = [];
             foreach (var it in selecteds)
             {
@@ -249,12 +274,23 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
 
                 if (ShouldStopTest(exitLoopKey))
                 {
-                    return false;
+                    break;
                 }
 
+                await pingSemaphore.WaitAsync();
                 tasks.Add(Task.Run(async () =>
                 {
-                    await DoRealPing(it);
+                    try
+                    {
+                        if (!ShouldStopTest(exitLoopKey))
+                        {
+                            await DoRealPing(it);
+                        }
+                    }
+                    finally
+                    {
+                        pingSemaphore.Release();
+                    }
                 }));
             }
             await Task.WhenAll(tasks);
@@ -504,6 +540,16 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
             timer.Stop();
         }
         return responseTime;
+    }
+
+    /// <summary>
+    /// How many servers may be pinged at the same time. Deliberately far below a page
+    /// size, which can be a thousand entries.
+    /// </summary>
+    private int GetPingConcurrency()
+    {
+        var count = _config?.SpeedTestItem.PingConcurrencyCount ?? Global.DefaultPingConcurrency;
+        return Math.Clamp(count, 1, 200);
     }
 
     private List<List<ServerTestItem>> GetTestBatchItem(List<ServerTestItem> lstSelected, int pageSize)

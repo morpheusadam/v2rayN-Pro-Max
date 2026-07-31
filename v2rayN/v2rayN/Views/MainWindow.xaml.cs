@@ -74,6 +74,10 @@ public partial class MainWindow
             this.BindCommand(ViewModel, vm => vm.RegionalPresetRussiaCmd, v => v.menuRegionalPresetsRussia).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegionalPresetIranCmd, v => v.menuRegionalPresetsIran).DisposeWith(disposables);
 
+            //auto mode
+            this.BindCommand(ViewModel, vm => vm.AutoModeCmd, v => v.btnAutoMode).DisposeWith(disposables);
+            this.BindCommand(ViewModel, vm => vm.AutoModeSourcesCmd, v => v.btnAutoModeSources).DisposeWith(disposables);
+
             this.BindCommand(ViewModel, vm => vm.ReloadCmd, v => v.menuReload).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.BlReloadEnabled, v => v.menuReload.IsEnabled).DisposeWith(disposables);
 

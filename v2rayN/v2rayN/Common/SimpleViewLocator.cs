@@ -11,6 +11,7 @@ public class SimpleViewLocator : IViewLocator
     private SimpleViewLocator()
     {
         Register<AddGroupServerViewModel, AddGroupServerWindow>();
+        Register<AutoModeSourcesViewModel, AutoModeSourcesWindow>();
         Register<AddServer2ViewModel, AddServer2Window>();
         Register<AddServerViewModel, AddServerWindow>();
         Register<BackupAndRestoreViewModel, BackupAndRestoreView>();

@@ -1,0 +1,527 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:v2rayN.Desktop.Converters">
+
+    <Styles.Resources>
+        <conv:RowStripeConverter x:Key="RayPulseRowStripe" />
+    </Styles.Resources>
+
+    <!--
+        RayPulse styling.
+
+        Included after GlobalStyles.axaml so these selectors win — in Avalonia the later
+        style takes precedence, which is the opposite of WPF's merged-dictionary rule.
+
+        Untyped selectors (Window, DataGrid, Button) restyle the whole application
+        without touching a single view file, so the diff against upstream v2rayN stays
+        small and the next merge stays cheap. The `RayPulse*` classes are opt-in on top.
+    -->
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <StackPanel Spacing="12">
+                <TextBlock Classes="RayPulseDisplay" Text="Auto Mode" />
+                <Button Classes="RayPulseAccent" Content="automode" />
+                <Button Content="Normal" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <!--  ============================  Foundation  ===========================  -->
+
+    <Style Selector="Window">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Background}" />
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+    </Style>
+
+    <Style Selector="UserControl">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+    </Style>
+
+    <Style Selector="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+    </Style>
+
+    <Style Selector="SelectableTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+    </Style>
+
+    <!--  ==============================  Menus  =============================  -->
+    <!--  The top menu is the app's main navigation; give it room to breathe.  -->
+
+    <Style Selector="Menu">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!--
+        Top-level menu entries read as navigation chips rather than a classic menu bar:
+        rounded, roomy, and reacting in the accent. The restraint is deliberate — the
+        default state stays flat so only the item under the pointer draws the eye.
+    -->
+    <Style Selector="Menu > MenuItem">
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="Menu > MenuItem:pointerover /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="Menu > MenuItem:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <Style Selector="Menu > MenuItem:selected /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="Menu > MenuItem:open">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <!--  Dropdowns: softer corners, accent highlight, matching typeface.  -->
+    <Style Selector="ContextMenu, MenuFlyoutPresenter">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusCard}" />
+        <Setter Property="Padding" Value="6" />
+    </Style>
+
+    <Style Selector="MenuItem">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusChip}" />
+    </Style>
+
+    <Style Selector="MenuItem:selected /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+    </Style>
+
+    <!--  =============================  Buttons  ============================  -->
+
+    <!--
+        Every button carries the accent. Semi's button theme paints the template's
+        ContentPresenter rather than the control, so each state has to be set there or
+        the theme's own colour wins.
+    -->
+    <Style Selector="Button">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+        <Setter Property="Padding" Value="{DynamicResource RayPulse.PadControl}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+    </Style>
+
+    <Style Selector="Button /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentGradient}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentLight}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+    </Style>
+
+    <Style Selector="Button:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentDeep}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+    </Style>
+
+    <Style Selector="Button:disabled /template/ ContentPresenter">
+        <Setter Property="Opacity" Value="0.40" />
+    </Style>
+
+    <!--  The primary action is the same orange, just larger and spaced away.  -->
+    <Style Selector="Button.RayPulseAccent">
+        <Setter Property="Margin" Value="6,0" />
+        <Setter Property="Padding" Value="18,8" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style Selector="Button.RayPulseGhost /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextSecondary}" />
+    </Style>
+
+    <!--
+        A dropdown is somewhere to read the current value, not an action to take, so it
+        keeps the field look instead of the accent fill every other button carries.
+    -->
+    <Style Selector="Button.RayPulseDropdown">
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusSmall}" />
+        <Setter Property="Padding" Value="12,7" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.RayPulseDropdown /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.CardMuted}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusSmall}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Hairline}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.RayPulseDropdown:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.CardMuted}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Accent}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.RayPulseDropdown:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.CardMuted}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.RayPulseDropdown PathIcon">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextSecondary}" />
+    </Style>
+
+    <!--
+        Tick lists inside those dropdowns. Padding and min-width are zeroed so the panel
+        lines up flush under the button it belongs to; Semi's defaults inset it and give
+        it a minimum size, which made it look like an unrelated menu floating nearby.
+    -->
+    <Style Selector="FlyoutPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Card}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Hairline}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusSmall}" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MaxWidth" Value="1000" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <Style Selector="FlyoutPresenter CheckBox">
+        <Setter Property="Padding" Value="8,0,0,0" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusChip}" />
+    </Style>
+
+    <Style Selector="FlyoutPresenter CheckBox:pointerover">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+    </Style>
+
+    <Style Selector="CheckBox">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.RayPulseGhost:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <!--  Square-ish icon buttons, same orange, so the toolbar reads as one family.  -->
+    <Style Selector="Button.RayPulseIcon">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="MinWidth" Value="36" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="3,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.RayPulseIcon PathIcon">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+    </Style>
+
+    <!--  v2rayN's own toolbar icon buttons, so they match rather than stay grey.  -->
+    <Style Selector="Button.IconButton">
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="Button.IconButton /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentGradient}" />
+    </Style>
+
+    <Style Selector="Button.IconButton PathIcon">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+    </Style>
+
+    <Style Selector="ToggleButton /template/ ContentPresenter">
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <!--  Switches follow the accent too, instead of Semi's default green.  -->
+    <Style Selector="ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <!--  ==============================  Cards  =============================  -->
+
+    <Style Selector="Border.RayPulseCard">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Card}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Hairline}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusCard}" />
+        <Setter Property="Padding" Value="{DynamicResource RayPulse.PadCard}" />
+    </Style>
+
+    <Style Selector="Border.RayPulseChip">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.CardMuted}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusChip}" />
+        <Setter Property="Padding" Value="{DynamicResource RayPulse.PadChip}" />
+    </Style>
+
+    <!--  ===========================  Typography  ===========================  -->
+
+    <Style Selector="TextBlock.RayPulseDisplay">
+        <Setter Property="FontSize" Value="{DynamicResource RayPulse.SizeDisplay}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.RayPulseMetric">
+        <Setter Property="FontSize" Value="{DynamicResource RayPulse.SizeMetric}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.RayPulseCaption">
+        <Setter Property="FontSize" Value="{DynamicResource RayPulse.SizeCaption}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextSecondary}" />
+    </Style>
+
+    <!--  Monospace so the digits do not jitter as the countdown ticks.  -->
+    <Style Selector="TextBlock.RayPulseCountdown">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Mono}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <!--  =============================  DataGrid  ===========================  -->
+    <!--
+        The server list is where the user spends their time. Taller rows, hairline
+        separators only, and an accent-tinted selection instead of a solid block.
+    -->
+
+    <Style Selector="DataGrid">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="RowHeight" Value="32" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource RayPulse.Hairline}" />
+        <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
+    </Style>
+
+    <!--
+        Column headers as a quiet label row: small, spaced, secondary colour, sitting on
+        a slightly recessed strip with a single hairline under it. The point is that the
+        data reads first and the headers stay out of the way.
+    -->
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextSecondary}" />
+        <Setter Property="Background" Value="{DynamicResource RayPulse.CardMuted}" />
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="SeparatorBrush" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Hairline}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <Style Selector="DataGridColumnHeader PathIcon">
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <!--  Row cells sit on the grid's own spacing, not the header's.  -->
+    <Style Selector="DataGridCell">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <!--
+        Alternating rows in a faint accent wash. Long server lists are hard to read
+        straight across and banding gives the eye a rail to follow. Kept at low opacity
+        so it reads as texture rather than as a highlight competing with the selection.
+
+        Set on the row's own Background rather than on a template part: the row template
+        belongs to the Semi theme, and naming its internals would break the moment that
+        theme changes one of them.
+    -->
+    <Style Selector="DataGridRow">
+        <Setter Property="Background" Value="{Binding $self.Index, Converter={StaticResource RayPulseRowStripe}}" />
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource RayPulse.Hover}" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource RayPulse.SelectionRow}" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <!--  ==========================  Inputs, tabs  ==========================  -->
+
+    <Style Selector="TextBox">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusSmall}" />
+        <Setter Property="ScrollViewer.AllowAutoHide" Value="False" />
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusSmall}" />
+    </Style>
+
+    <Style Selector="TabItem">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="FontWeight" Value="Medium" />
+    </Style>
+
+    <Style Selector="ToggleSwitch">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+    </Style>
+
+    <!--
+        The group selector ("All", then one chip per subscription) ships in Semi's blue,
+        which is the last blue left once everything else follows the accent.
+    -->
+    <Style Selector="ListBoxItem">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Accent}" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.OnAccent}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+    </Style>
+
+    <!--  Slim, unobtrusive scrollbars — the wide default grey bar dominated the view.  -->
+    <Style Selector="ScrollBar">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ScrollBar /template/ Thumb">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Track}" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector="ScrollBar:pointerover /template/ Thumb">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Accent}" />
+    </Style>
+
+    <!--  Dropdowns in the status bar, so they stop reading as leftover chrome.  -->
+    <Style Selector="ComboBox /template/ Border#Background">
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusButton}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Font}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusChip}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.AccentSoft}" />
+    </Style>
+
+    <!--  ============================  Terminal  ============================  -->
+    <!--
+        The log pane is where you watch cores start and configs fail, so it is styled as
+        a console: monospace, near-black regardless of app theme, gutter line numbers,
+        and a title strip above it. Applied by class so only the log gets it.
+    -->
+
+    <Style Selector="Border.RayPulseTerminal">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Terminal.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Terminal.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RayPulse.RadiusCard}" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
+    <Style Selector="Border.RayPulseTerminalChrome">
+        <Setter Property="Background" Value="{DynamicResource RayPulse.Terminal.Chrome}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RayPulse.Terminal.Border}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="12,7" />
+    </Style>
+
+    <Style Selector="TextBlock.RayPulseTerminalTitle">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Mono}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Terminal.Gutter}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!--
+        Editable code surface. Semi's TextBox paints its own chrome and centres a
+        single-line-height box inside whatever space it is given, which is why a
+        multi-line paste ended up as one strip floating in the middle of the panel.
+        Stretching it and stripping the chrome makes it behave like an editor pane.
+    -->
+    <Style Selector="TextBox.RayPulseCode">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Mono}" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Terminal.Foreground}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource RayPulse.Accent}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource RayPulse.AccentSoft}" />
+        <Setter Property="SelectionForegroundBrush" Value="{DynamicResource RayPulse.Terminal.Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.RayPulseCode /template/ Border">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="TextBox.RayPulseCode:focus /template/ Border">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="TextBox.RayPulseCode /template/ TextPresenter">
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+
+    <!--  Read-only code sample, used by the guide.  -->
+    <Style Selector="TextBlock.RayPulseCodeBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource RayPulse.Mono}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.Terminal.Foreground}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="TextBlock.RayPulseSection">
+        <Setter Property="FontSize" Value="{DynamicResource RayPulse.SizeMetric}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource RayPulse.TextPrimary}" />
+    </Style>
+
+</Styles>

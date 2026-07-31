@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="220" viewBox="0 0 1000 220" role="img" aria-label="v2rayN Pro Max - automatic server selection for V2Ray and Xray">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#141416"/>
+      <stop offset="1" stop-color="#0B0F0C"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F15A2B"/>
+      <stop offset="1" stop-color="#FF7A45"/>
+    </linearGradient>
+    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"    stop-color="#F15A2B" stop-opacity="0"/>
+      <stop offset="0.5"  stop-color="#F15A2B" stop-opacity="0.55"/>
+      <stop offset="1"    stop-color="#F15A2B" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform" type="translate"
+                        from="-1 0" to="1 0" dur="3.6s" repeatCount="indefinite"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="220" rx="18" fill="url(#bg)"/>
+  <rect width="1000" height="220" rx="18" fill="url(#sweep)"/>
+
+  <!-- signal bars: each one rises as a server is measured -->
+  <g transform="translate(64,150)">
+    <rect x="0"  y="-22" width="10" height="22" rx="3" fill="url(#accent)" opacity="0.9">
+      <animate attributeName="height" values="14;46;22;38;14" dur="2.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-14;-46;-22;-38;-14" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="18" y="-34" width="10" height="34" rx="3" fill="url(#accent)" opacity="0.75">
+      <animate attributeName="height" values="34;18;52;26;34" dur="2.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-34;-18;-52;-26;-34" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="36" y="-48" width="10" height="48" rx="3" fill="url(#accent)">
+      <animate attributeName="height" values="48;30;40;58;48" dur="2.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-48;-30;-40;-58;-48" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="54" y="-26" width="10" height="26" rx="3" fill="url(#accent)" opacity="0.6">
+      <animate attributeName="height" values="26;44;16;34;26" dur="2.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-26;-44;-16;-34;-26" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <text x="160" y="92" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="44" font-weight="700" fill="#F5F5F3">
+    v2rayN <tspan fill="#F15A2B">Pro Max</tspan>
+  </text>
+  <text x="162" y="128" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" fill="#9A9A9E">
+    It finds the working servers so you do not have to
+  </text>
+
+  <!-- status line, typed out like a console -->
+  <text x="162" y="170" font-family="Cascadia Mono, Consolas, monospace" font-size="14" fill="#3BFF6E">
+    <tspan>
+      <animate attributeName="opacity" values="0;1;1;1" dur="3.6s" repeatCount="indefinite"/>
+      auto mode: 1135 candidates tested, keeping the fastest 10
+    </tspan>
+  </text>
+
+  <g transform="translate(880,110)">
+    <circle r="46" fill="none" stroke="#2A2A2E" stroke-width="8"/>
+    <circle r="46" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="289" stroke-dashoffset="289" transform="rotate(-90)">
+      <animate attributeName="stroke-dashoffset" values="289;72;289" dur="3.6s" repeatCount="indefinite"/>
+    </circle>
+    <text x="0" y="7" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif"
+          font-size="20" font-weight="700" fill="#F5F5F3">10</text>
+  </g>
+</svg>

@@ -108,18 +108,124 @@ public class CoreManager
         var coreType = selecteds.FirstOrDefault()?.CoreType == ECoreType.sing_box ? ECoreType.sing_box : ECoreType.Xray;
         var fileName = string.Format(Global.CoreSpeedtestConfigFileName, Utils.GetGuid(false));
         var configPath = Utils.GetBinConfigPath(fileName);
-        var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, configPath, selecteds, coreType);
-        await UpdateFunc(false, result.Msg);
-        if (result.Success != true)
+        var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
+
+        var candidates = selecteds.ToList();
+        RetResult result = new();
+
+        // A speed test puts the whole batch in one config file, and the core refuses the
+        // entire file if any single node in it is malformed — so one bad node silently
+        // turns into "every server timed out". Asking the core to validate the file first
+        // and dropping exactly the node it names is far cheaper than discovering the
+        // problem by starting cores and re-testing halves of the batch: validating a
+        // thousand outbounds takes under a third of a second and needs no network at all.
+        for (var attempt = 0; ; attempt++)
         {
-            return null;
+            foreach (var it in candidates)
+            {
+                it.AllowTest = false;
+            }
+
+            result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, configPath, candidates, coreType);
+            if (result.Success != true)
+            {
+                await UpdateFunc(false, result.Msg);
+                return null;
+            }
+
+            if (attempt >= MaxSpeedtestConfigRepairs)
+            {
+                break;
+            }
+
+            var rejectedTag = await FindRejectedOutboundTag(coreInfo, configPath, coreType);
+            if (rejectedTag is null)
+            {
+                break;
+            }
+
+            var dropped = candidates.RemoveAll(t => $"{Global.ProxyTag}{t.Port}" == rejectedTag);
+            if (dropped == 0)
+            {
+                // The core named something we cannot map back to a node; carry on and let
+                // it report the failure rather than looping on an unfixable config.
+                break;
+            }
+        }
+
+        await UpdateFunc(false, result.Msg);
+
+        var excluded = selecteds.Count - candidates.Count;
+        if (excluded > 0)
+        {
+            await UpdateFunc(false, string.Format(ResUI.SpeedtestingSkippedIncompatible, excluded));
         }
 
         await UpdateFunc(false, string.Format(ResUI.StartService, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
         await UpdateFunc(false, configPath);
 
-        var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
         return await RunProcess(coreInfo, fileName, true, false);
+    }
+
+    /// <summary>How many rejected nodes to strip before giving up on a batch.</summary>
+    private const int MaxSpeedtestConfigRepairs = 24;
+
+    private static readonly Regex _rejectedOutboundRegex =
+        new(@"failed to build outbound config with tag (\S+)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Ask the core to check the generated config without launching it, and return the
+    /// outbound tag it refuses, or null when the file is usable.
+    /// </summary>
+    private async Task<string?> FindRejectedOutboundTag(CoreInfo? coreInfo, string configPath, ECoreType coreType)
+    {
+        // Only Xray is known to support this validation flag and to name the offending
+        // outbound in its output; anything else keeps the previous behaviour.
+        if (coreType != ECoreType.Xray)
+        {
+            return null;
+        }
+
+        try
+        {
+            var exePath = CoreInfoManager.Instance.GetCoreExecFile(coreInfo, out _);
+            if (exePath.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = $"run -test -c \"{configPath}\"",
+                    WorkingDirectory = Utils.GetBinConfigPath(),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                }
+            };
+
+            process.Start();
+            var stdout = await process.StandardOutput.ReadToEndAsync();
+            var stderr = await process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode == 0)
+            {
+                return null;
+            }
+
+            var match = _rejectedOutboundRegex.Match(stdout + stderr);
+            return match.Success ? match.Groups[1].Value : null;
+        }
+        catch (Exception ex)
+        {
+            Logging.SaveLog(_tag, ex);
+            return null;
+        }
     }
 
     public async Task<ProcessService?> LoadCoreConfigSpeedtest(ServerTestItem testItem)

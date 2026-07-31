@@ -164,6 +164,17 @@ public class SpeedTestItem
     public string UdpTestTarget { get; set; }
     public int? SpeedTestPageSize { get; set; }
     public int? SpeedTestDelayInterval { get; set; }
+
+    /// <summary>
+    /// How many servers are pinged at once inside one batch.
+    ///
+    /// Every real ping builds its own HttpClient and performs two TLS requests through a
+    /// local socks port. Firing a thousand of those simultaneously starves the thread
+    /// pool and blows past each request's timeout, so an entire batch comes back as -1
+    /// even though the core is healthy and every port is listening. Testing in bounded
+    /// waves keeps each request inside its timeout and lets results appear as they land.
+    /// </summary>
+    public int? PingConcurrencyCount { get; set; }
 }
 
 [Serializable]

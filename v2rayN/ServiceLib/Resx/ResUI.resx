@@ -915,6 +915,9 @@
   <data name="SpeedtestingSkip" xml:space="preserve">
     <value>Skip test</value>
   </data>
+  <data name="SpeedtestingSkippedIncompatible" xml:space="preserve">
+    <value>Skipped {0} server(s) the core rejected, so the rest of the batch could be tested.</value>
+  </data>
   <data name="menuEditServer" xml:space="preserve">
     <value>Edit </value>
   </data>

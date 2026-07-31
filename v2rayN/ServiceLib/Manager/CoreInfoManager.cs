@@ -76,7 +76,22 @@ public sealed class CoreInfoManager
     {
         return type switch
         {
-            ECoreType.v2rayN => !Utils.IsPackagedInstall(),
+            // Self-update of the app itself is off in this fork, on purpose.
+            //
+            // An update replaces v2rayN.exe and ServiceLib.dll wholesale. Everything this
+            // build adds — Auto Mode, the RayPulse styling, the icons, the fix for the
+            // batch that reported every server as -1 — is compiled into those two files,
+            // so accepting an update would quietly revert the app to stock upstream. The
+            // settings would survive in guiConfigs and there would be nothing left that
+            // reads them.
+            //
+            // Returning false here removes it from the Check Update dialog and from the
+            // daily background check. Xray, sing-box, mihomo and the geo files below are
+            // untouched and keep updating from their own upstream repositories, which is
+            // where security fixes that actually matter come from. To ship a new version,
+            // rebuild from source; Global.CoreUrls already points at this fork's releases
+            // for whenever that is turned back on.
+            ECoreType.v2rayN => false,
             ECoreType.Xray => true,
             ECoreType.mihomo => true,
             ECoreType.sing_box => true,

@@ -1,0 +1,147 @@
+<base:WindowBase
+    x:Class="v2rayN.Views.AutoModeSourcesWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:v2rayN.Base"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:ServiceLib.Resx;assembly=ServiceLib"
+    xmlns:vms="clr-namespace:ServiceLib.ViewModels;assembly=ServiceLib"
+    Title="Auto Mode — subscription sources"
+    Width="1100"
+    Height="760"
+    x:TypeArguments="vms:AutoModeSourcesViewModel"
+    ResizeMode="CanResize"
+    ShowInTaskbar="False"
+    Style="{StaticResource WindowGlobal}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                ClipToBounds="True"
+                Style="{StaticResource MaterialDesignToolBar}">
+                <Button x:Name="btnSave">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="{StaticResource MarginRight8}"
+                            VerticalAlignment="Center"
+                            Kind="ContentSave" />
+                        <TextBlock Style="{StaticResource ToolbarTextBlock}" Text="Save" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button x:Name="btnImportFile">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="{StaticResource MarginRight8}"
+                            VerticalAlignment="Center"
+                            Kind="FileImport" />
+                        <TextBlock Style="{StaticResource ToolbarTextBlock}" Text="Import file" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button x:Name="btnResetStats">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="{StaticResource MarginRight8}"
+                            VerticalAlignment="Center"
+                            Kind="Restore" />
+                        <TextBlock Style="{StaticResource ToolbarTextBlock}" Text="Reset stats" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <Button x:Name="btnClose" IsCancel="True">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Margin="{StaticResource MarginRight8}"
+                            VerticalAlignment="Center"
+                            Kind="Close" />
+                        <TextBlock Style="{StaticResource ToolbarTextBlock}" Text="{x:Static resx:ResUI.menuClose}" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <TextBlock
+            x:Name="txtSummary"
+            Margin="8,4"
+            DockPanel.Dock="Bottom"
+            Opacity="0.75" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="6" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" Margin="8,8,8,0">
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,4"
+                    Opacity="0.75"
+                    Text="One subscription link per line. Paste as many as you like — each run samples a few of them and learns which ones still work." />
+                <TextBox
+                    x:Name="txtSources"
+                    AcceptsReturn="True"
+                    AcceptsTab="False"
+                    FontFamily="Consolas"
+                    HorizontalScrollBarVisibility="Auto"
+                    Style="{StaticResource DefTextBox}"
+                    TextWrapping="NoWrap"
+                    VerticalContentAlignment="Top"
+                    VerticalScrollBarVisibility="Auto" />
+            </DockPanel>
+
+            <GridSplitter
+                Grid.Row="1"
+                Height="6"
+                HorizontalAlignment="Stretch" />
+
+            <DataGrid
+                x:Name="lstStats"
+                Grid.Row="2"
+                Margin="8,0,8,0"
+                AutoGenerateColumns="False"
+                BorderThickness="1"
+                CanUserAddRows="False"
+                CanUserResizeRows="False"
+                EnableRowVirtualization="True"
+                GridLinesVisibility="All"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                Style="{StaticResource DefDataGrid}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="80"
+                        Binding="{Binding Quality}"
+                        Header="Quality" />
+                    <DataGridTextColumn
+                        Width="110"
+                        Binding="{Binding Green}"
+                        Header="Working" />
+                    <DataGridTextColumn
+                        Width="90"
+                        Binding="{Binding Configs}"
+                        Header="Configs" />
+                    <DataGridTextColumn
+                        Width="110"
+                        Binding="{Binding LastTried}"
+                        Header="Last tried" />
+                    <DataGridTextColumn
+                        Width="120"
+                        Binding="{Binding State}"
+                        Header="State" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Url}"
+                        Header="URL" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</base:WindowBase>
