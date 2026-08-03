@@ -1,13 +1,14 @@
+# v2rayN Pro Max
+
+v2rayN Pro Max is a V2Ray / Xray client for Windows and Linux, for people who use free subscription links and would rather have the client test and pick working servers than do it by hand.
+
 <div align="center">
 
 <img src="docs/images/banner.svg" alt="v2rayN Pro Max - automatic server selection for V2Ray and Xray on Windows" width="100%">
 
 <img src="docs/images/logo.png" alt="v2rayN Pro Max logo" width="110">
 
-<h1>v2rayN Pro Max</h1>
-
-<p><strong>A V2Ray / Xray client for Windows that finds working servers by itself.</strong><br>
-Press one button. It reads your subscription links, tests what is actually alive, measures real speed, and leaves the fastest servers ready to use.</p>
+<p>Press one button. It reads your subscription links, tests what is actually alive, measures real speed, and leaves the fastest servers ready to use.</p>
 
 <p>
 <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-1f1f22?style=for-the-badge&labelColor=F15A2B">
